@@ -5,6 +5,13 @@ import laravel from 'laravel-vite-plugin';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
+    server: {
+        port: Number.parseInt(process.env.VITE_PORT ?? '5175', 10),
+        strictPort: true,
+        hmr: {
+            port: Number.parseInt(process.env.VITE_PORT ?? '5175', 10),
+        },
+    },
     plugins: [
         laravel({
             input: ['resources/js/app.ts'],

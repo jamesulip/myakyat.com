@@ -32,6 +32,8 @@ export interface User {
     email: string;
     avatar?: string;
     email_verified_at: string | null;
+    strava_id?: number;
+    strava_avatar_url?: string;
     created_at: string;
     updated_at: string;
 }

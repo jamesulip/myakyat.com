@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Settings\PasswordController;
 use App\Http\Controllers\Settings\ProfileController;
+use App\Http\Controllers\Settings\StravaController;
 use App\Http\Controllers\Settings\TwoFactorAuthenticationController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -25,4 +26,16 @@ Route::middleware('auth')->group(function () {
 
     Route::get('settings/two-factor', [TwoFactorAuthenticationController::class, 'show'])
         ->name('two-factor.show');
+
+    Route::get('settings/strava/redirect', [StravaController::class, 'redirect'])
+        ->name('strava.redirect');
+
+    Route::get('settings/strava/callback', [StravaController::class, 'callback'])
+        ->name('strava.callback');
+
+    Route::put('settings/strava/avatar', [StravaController::class, 'avatar'])
+        ->name('strava.avatar');
+
+    Route::delete('settings/strava', [StravaController::class, 'destroy'])
+        ->name('strava.destroy');
 });

@@ -34,6 +34,8 @@ class User extends Authenticatable
         'two_factor_secret',
         'two_factor_recovery_codes',
         'remember_token',
+        'strava_access_token',
+        'strava_refresh_token',
     ];
 
     /**
@@ -47,6 +49,10 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'two_factor_confirmed_at' => 'datetime',
+            'strava_access_token' => 'encrypted',
+            'strava_refresh_token' => 'encrypted',
+            'strava_token_expires_at' => 'datetime',
+            'strava_connected_at' => 'datetime',
         ];
     }
 }

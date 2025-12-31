@@ -19,7 +19,7 @@ interface Props {
     status?: string;
 }
 
-defineProps<Props>();
+const props = defineProps<Props>();
 
 const breadcrumbItems: BreadcrumbItem[] = [
     {
@@ -30,6 +30,12 @@ const breadcrumbItems: BreadcrumbItem[] = [
 
 const page = usePage();
 const user = page.props.auth.user;
+
+const canUseStravaAvatar = !!(
+    user.strava_id &&
+    user.strava_avatar_url &&
+    (user.avatar ?? '') !== user.strava_avatar_url
+);
 </script>
 
 <template>
@@ -120,6 +126,60 @@ const user = page.props.auth.user;
                         </Transition>
                     </div>
                 </Form>
+            </div>
+
+            <div class="flex flex-col space-y-6">
+                <HeadingSmall
+                    title="Strava"
+                    description="Connect your Strava account"
+                />
+
+                <div class="space-y-3">
+                    <p v-if="user.strava_id" class="text-sm text-muted-foreground">
+                        Connected to Strava athlete #{{ user.strava_id }}.
+                    </p>
+                    <p v-else class="text-sm text-muted-foreground">
+                        Not connected.
+                    </p>
+
+                    <p v-if="status === 'strava-connected'" class="text-sm font-medium text-green-600">
+                        Strava connected.
+                    </p>
+                    <p v-else-if="status === 'strava-disconnected'" class="text-sm font-medium text-green-600">
+                        Strava disconnected.
+                    </p>
+                    <p v-else-if="status === 'strava-access-denied'" class="text-sm font-medium text-red-600">
+                        Strava connection was cancelled.
+                    </p>
+                    <p v-else-if="status === 'strava-invalid-state'" class="text-sm font-medium text-red-600">
+                        Strava connection failed. Please try again.
+                    </p>
+
+                    <p
+                        v-if="props.status === 'strava-connected' && canUseStravaAvatar"
+                        class="text-sm text-muted-foreground"
+                    >
+                        We found your Strava profile photo. Use it as your avatar?
+                    </p>
+
+                    <div class="flex items-center gap-3">
+                        <Button v-if="!user.strava_id" as-child>
+                            <a href="/settings/strava/redirect">Connect Strava</a>
+                        </Button>
+
+                        <Button
+                            v-else-if="props.status === 'strava-connected' && canUseStravaAvatar"
+                            variant="secondary"
+                            as-child
+                        >
+                            <Link href="/settings/strava/avatar" method="put" as="button">Use Strava avatar</Link>
+                        </Button>
+
+                        <Button v-else variant="outline" as-child>
+                            <Link href="/settings/strava" method="delete" as="button">Disconnect</Link>
+                        </Button>
+                    </div>
+                </div>
             </div>
 
             <DeleteUser />
